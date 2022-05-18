@@ -1,6 +1,26 @@
 
 var issueContainerEl = document.querySelector("#issues-container");
 var limitWarningEl = document.querySelector("#limit-warning");
+var repoNameEl = document.querySelector("#repo-name");
+
+
+//show reponame and open issues on second page 当点击搜索的结果在第一页的时候
+var getRepoName = function(){
+    //get the reponame
+    var queryString = document.location.search;
+    var repoName = queryString.split("=")[1];
+    console.log(repoName);
+    //if reponame exists
+    if(repoName){
+      //pass the 参数 to getrepoissues
+       getRepoIssues(repoName);
+       repoNameEl.textContent = repoName;
+     }else{
+         //if no repo was given,redirect to the home page
+         document.location.replace("./index.html");
+     }
+
+};
 
 
 var getRepoIssues = function(repo){
@@ -21,27 +41,12 @@ var getRepoIssues = function(repo){
             });
         }
         else{
-            alert("There was a problem with your request");
+            //if not successful,redirect to homepage
+            document.location.replace("./index.html");
         }
     });
 
 };
-
-getRepoIssues("facebook/react");
-
-//if repo has more than 30 issues
-var displayWaring = function(repo){
-    //add text to warning container
-    limitWarningEl.textContent = "To see more than 30 issues, visit ";
-
-    var linkEl = document.createElement("a");
-    linkEl.textContent = "See more Issues on GitHub.com";
-    linkEl.setAttribute("href","https://github.com/" + repo +"/issues");
-    linkEl.setAttribute("target","_blank");
-
-    //append to warning container
-    limitWarningEl.appendChild(linkEl);
-}
 
 var displayIssues = function(issues){
     if(issues.length === 0){
@@ -82,3 +87,22 @@ var displayIssues = function(issues){
     }
 
 };
+
+//if repo has more than 30 issues
+var displayWaring = function(repo){
+    //add text to warning container
+    limitWarningEl.textContent = "To see more than 30 issues, visit ";
+
+    var linkEl = document.createElement("a");
+    linkEl.textContent = "See more Issues on GitHub.com";
+    linkEl.setAttribute("href","https://github.com/" + repo +"/issues");
+    linkEl.setAttribute("target","_blank");
+
+    //append to warning container
+    limitWarningEl.appendChild(linkEl);
+}
+
+
+
+getRepoName();
+
